@@ -55,13 +55,31 @@ namespace MZConvertToBGMS {
             return data;
         }
 
-        public static byte[] Decompress(byte[] zippedData) {
+        public static byte[] DecompressGZIP(byte[] zippedData) {
 
             if (zippedData.Length > 0) {
                 byte[] decompressedData = null;
                 using (MemoryStream outputStream = new MemoryStream()) {
                     using (MemoryStream inputStream = new MemoryStream(zippedData)) {
                         using (GZipStream zip = new GZipStream(inputStream, CompressionMode.Decompress)) {
+                            zip.CopyTo(outputStream);
+                        }
+                    }
+                    decompressedData = outputStream.ToArray();
+                }
+
+                return decompressedData;
+            }
+            return zippedData;
+        }
+
+        public static byte[] DecompressZLib(byte[] zippedData) {
+
+            if (zippedData.Length > 0) {
+                byte[] decompressedData = null;
+                using (MemoryStream outputStream = new MemoryStream()) {
+                    using (MemoryStream inputStream = new MemoryStream(zippedData)) {
+                        using (Ionic.Zlib.ZlibStream zip = new Ionic.Zlib.ZlibStream(inputStream, Ionic.Zlib.CompressionMode.Decompress)) {
                             zip.CopyTo(outputStream);
                         }
                     }

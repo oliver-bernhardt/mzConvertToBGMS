@@ -99,17 +99,20 @@ namespace MZConvertToBGMS.MSScanReader {
                         byte[] scanData = System.Convert.FromBase64String(reader.Value);
                         bool reversedOrder = byteOrderType.Equals("network", StringComparison.OrdinalIgnoreCase);
 
-                        if (reversedOrder) {
-                            Array.Reverse(scanData);
-                        }
+
 
                         if (compressionType.Equals("zlib", StringComparison.OrdinalIgnoreCase)) {
-                            scanData = BinaryConversionUtil.Decompress(scanData);
+                            scanData = BinaryConversionUtil.DecompressZLib(scanData);
                         } else if (compressionType.Equals("none", StringComparison.OrdinalIgnoreCase)) {
                             //Nothing todo in this case
                         } else {
                             throw new FormatException("Not supported compression type: " + compressionType);
                         }
+
+                        if (reversedOrder) {
+                            Array.Reverse(scanData);
+                        }
+
 
                         if (precissionType.Equals("64")) {
                             double[] dScan = BinaryConversionUtil.readDoubleArray(scanData, scanData.Length);
@@ -155,15 +158,31 @@ namespace MZConvertToBGMS.MSScanReader {
         }
 
         private static float[,] mzPairsToScan(double[] data) {
-            float[,] scan = new float[2, data.Length / 2];
+            List<Tuple<float, float>> pairs = new List<Tuple<float, float>>(data.Length / 2);
 
-            int scanIndex = 0;
             for (int i = 0; i < data.Length; i += 2) {
-                scan[0, scanIndex] = (float)data[i];
-                scan[1, scanIndex] = (float)data[i + 1];
-                ++scanIndex;
+                float mz = (float)data[i];
+                float intensity = (float)data[i + 1];
+                if (mz > 0.0 || intensity > 0.0) {
+                    pairs.Add(new Tuple<float, float>(mz, intensity));   
+                }
             }
+
+            pairs.Sort(MZPairItemOrder.INSTANCE);
+            float[,] scan = new float[2, pairs.Count];
+            for (int i = 0; i < scan.Length; ++i) {
+                scan[0, i] = pairs[i].Item1;
+                scan[1, i] = pairs[i].Item2;
+            }
+
             return scan;
+        }
+
+        private class MZPairItemOrder : IComparer<Tuple<float, float>> {
+            public static MZPairItemOrder INSTANCE = new MZPairItemOrder();
+            public int Compare(Tuple<float, float> x, Tuple<float, float> y) {
+                return x.Item1.CompareTo(y.Item1);
+            }
         }
 
         private ScanMode readScanMode(XmlReader reader) {

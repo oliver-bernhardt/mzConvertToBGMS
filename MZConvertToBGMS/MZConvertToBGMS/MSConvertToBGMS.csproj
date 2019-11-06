@@ -42,6 +42,9 @@
     <Reference Include="BGSRawAPI">
       <HintPath>..\BGSRawAPI.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
