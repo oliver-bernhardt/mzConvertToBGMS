@@ -8,6 +8,11 @@ using BGSRawAPI;
 using MZConvertToBGMS.VendorAPIs;
 
 namespace MZConvertToBGMS.MSScanReader {
+
+    /// <summary>
+    /// This class is not really necessary since Spectronaut / SpectroMine / SpectroDive and QuiC all support Thermo raw files natively
+    /// The main reason why I added this class however, is as an easy starting step for some raw file pre-processing and subsequent conversion to bgms to the community
+    /// </summary>
     public class ThermoScanReader : AScanReader {
         private ThermoAPI api;
         private string file;
