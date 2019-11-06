@@ -48,7 +48,7 @@ namespace MZConvertToBGMS {
                 }
                 writer.Finalize();
                 reader.close();
-                string status = (allFine) ? "[DONE]" : "[FAILED]";
+                string status = (allFine) ? " [DONE]" : " [FAILED]";
 
                 Console.WriteLine(consoleClean + info.Name + status);
                 if (allFine) {
