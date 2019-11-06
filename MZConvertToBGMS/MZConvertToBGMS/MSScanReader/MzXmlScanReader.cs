@@ -17,6 +17,7 @@ namespace MZConvertToBGMS.MSScanReader {
         private static readonly string MSMODEL_NODE_NAME = "msModel";
         private static readonly string MASS_ANALYZER_NODE_NAME = "msMassAnalyzer";
         private static readonly string PARENT_FILE_NODE_NAME = "parentFile";
+        private static readonly string MSRUN_NODE_NAME = "msRun";
 
         private static readonly string ISCENTROID_ATTRIBUTE_NAME = "centroided";
         private static readonly string MSLEVEL_ATTRIBUTE_NAME = "msLevel";
@@ -25,6 +26,7 @@ namespace MZConvertToBGMS.MSScanReader {
         private static readonly string COMPRESSION_TYPE_ATTRIBUTE_NAME = "compressionType";
         private static readonly string PRECISSION_TYPE_ATTRIBUTE_NAME = "precision";
         private static readonly string BYTE_ORDER_TYPE_ATTRIBUTE_NAME = "byteOrder";
+        private static readonly string SCAN_COUNT_ATTRIBUTE_NAME = "scanCount";
 
         private XmlReader reader;
 
@@ -33,6 +35,7 @@ namespace MZConvertToBGMS.MSScanReader {
         private string msSerialNumber = "Unknown";
         private DateTime acquisitionDate = DateTime.Now;
         private string parentFile = "Unknown";
+        private int totalScanCount = -1;
 
         public MzXmlScanReader(string mzXmlFile) {
             System.IO.Stream fStream = new System.IO.FileStream(mzXmlFile, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read);
@@ -55,6 +58,12 @@ namespace MZConvertToBGMS.MSScanReader {
                         this.msModel = reader.GetAttribute("value");
                     } else if (reader.Name.Equals(PARENT_FILE_NODE_NAME, StringComparison.OrdinalIgnoreCase)) {
                         this.parentFile = reader.GetAttribute("fileName");
+                    } else if (reader.Name.Equals(MSRUN_NODE_NAME, StringComparison.OrdinalIgnoreCase)) {
+                        string scanCountValue = reader.GetAttribute(SCAN_COUNT_ATTRIBUTE_NAME);
+                        int count;
+                        if (!string.IsNullOrEmpty(scanCountValue) && int.TryParse(scanCountValue, out count)) {
+                            this.totalScanCount = count;
+                        }
                     }
                 } else if (reader.NodeType == XmlNodeType.EndElement && reader.Name.Equals("msInstrument", StringComparison.OrdinalIgnoreCase)) {
                     break;
@@ -269,6 +278,10 @@ namespace MZConvertToBGMS.MSScanReader {
 
         public override VendorType getVendor() {
             return this.vendor;
+        }
+
+        public override int getTotalScanCount() {
+            return this.totalScanCount;
         }
     }
 }

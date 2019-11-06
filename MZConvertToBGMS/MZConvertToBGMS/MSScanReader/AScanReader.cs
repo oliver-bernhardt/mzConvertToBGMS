@@ -28,6 +28,7 @@ namespace MZConvertToBGMS.MSScanReader {
         public abstract string getInstrumentSerialNumber();
         public abstract DateTime getAcquisitionDate();
         public abstract VendorType getVendor();
-        public abstract void close();        
+        public abstract void close();
+        public abstract int getTotalScanCount();
     }
 }
