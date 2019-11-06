@@ -34,7 +34,7 @@ namespace MZConvertToBGMS.MSScanReader {
             for (int i = 1; i <= this.api.getNumberOfScans(); ++i) {
                 double[,] msxWindows = this.api.getWindowDefinitionsForScanNumber(i);
                 double rt = this.api.getRTFromScanNumber(i);
-                MSLevel level = (MSLevel)this.api.getMSOrderForScanNumber(i);
+                MSLevel level = (MSLevel)(this.api.getMSOrderForScanNumber(i)-1);
                 bool isCentroid = this.api.IsCentroidScan(i);
 
                 double[,] scan = this.api.getScan(i);
