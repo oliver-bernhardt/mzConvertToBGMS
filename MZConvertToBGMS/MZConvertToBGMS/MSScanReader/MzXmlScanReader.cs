@@ -17,7 +17,7 @@ namespace MZConvertToBGMS.MSScanReader {
         private static readonly string MSMODEL_NODE_NAME = "msModel";
         private static readonly string MASS_ANALYZER_NODE_NAME = "msMassAnalyzer";
         private static readonly string PARENT_FILE_NODE_NAME = "parentFile";
-    
+
         private static readonly string ISCENTROID_ATTRIBUTE_NAME = "centroided";
         private static readonly string MSLEVEL_ATTRIBUTE_NAME = "msLevel";
         private static readonly string RT_ATTRIBUTE_NAME = "retentionTime";
@@ -81,7 +81,7 @@ namespace MZConvertToBGMS.MSScanReader {
             MSLevel msLevel = MSLevel.UNKNOWN;
             double rt = double.NaN;
             double mzWindowStart = 0.0;
-            double mzWindowEnd = 0.0;
+            double mzWindowEnd = 5000;
             float[,] scan = null;
 
             while (reader.Read()) {
@@ -96,7 +96,7 @@ namespace MZConvertToBGMS.MSScanReader {
                         string precissionType = reader.GetAttribute(PRECISSION_TYPE_ATTRIBUTE_NAME);
                         string byteOrderType = reader.GetAttribute(BYTE_ORDER_TYPE_ATTRIBUTE_NAME);
                         reader.Read();
-                        byte[] scanData =System.Convert.FromBase64String(reader.Value);
+                        byte[] scanData = System.Convert.FromBase64String(reader.Value);
                         bool reversedOrder = byteOrderType.Equals("network", StringComparison.OrdinalIgnoreCase);
 
                         if (reversedOrder) {
@@ -110,7 +110,7 @@ namespace MZConvertToBGMS.MSScanReader {
                         } else {
                             throw new FormatException("Not supported compression type: " + compressionType);
                         }
-                        
+
                         if (precissionType.Equals("64")) {
                             double[] dScan = BinaryConversionUtil.readDoubleArray(scanData, scanData.Length);
                             if (reversedOrder) { Array.Reverse(dScan); }
@@ -126,13 +126,13 @@ namespace MZConvertToBGMS.MSScanReader {
                         string widthString = reader.GetAttribute(WINDOW_WIDTH_ATTRIBUTE_NAME);
                         reader.Read();
                         string windowCenterString = reader.Value;
-                        double center;double width;
+                        double center; double width;
                         if (double.TryParse(widthString, out width) && double.TryParse(windowCenterString, out center)) {
                             mzWindowStart = center - (width / 2.0);
                             mzWindowEnd = center + (width / 2.0);
                         }
                     }
-                }else if(reader.NodeType == XmlNodeType.EndElement && reader.Name.Equals(SCAN_NODE_NAME)){
+                } else if (reader.NodeType == XmlNodeType.EndElement && reader.Name.Equals(SCAN_NODE_NAME)) {
                     bool isCentroid = scanMode != ScanMode.Profile;
                     PrecursorSelection[] window = new PrecursorSelection[] { new PrecursorSelection(mzWindowStart, mzWindowEnd) };
                     return new ScanEvent(scan, rt, msLevel, isCentroid, window);
@@ -142,8 +142,8 @@ namespace MZConvertToBGMS.MSScanReader {
             return null;
         }
 
-        private static float[,] mzPairsToScan(float[] data) {            
-            float [,] scan = new float[2, data.Length / 2];
+        private static float[,] mzPairsToScan(float[] data) {
+            float[,] scan = new float[2, data.Length / 2];
 
             int scanIndex = 0;
             for (int i = 0; i < data.Length; i += 2) {
@@ -185,7 +185,7 @@ namespace MZConvertToBGMS.MSScanReader {
             string value = reader.GetAttribute(MSLEVEL_ATTRIBUTE_NAME);
             int msOrder;
             if (!string.IsNullOrEmpty(value) && int.TryParse(value, out msOrder)) {
-                mode = (MSLevel)(msOrder-1);
+                mode = (MSLevel)(msOrder - 1);
             }
             return mode;
         }
