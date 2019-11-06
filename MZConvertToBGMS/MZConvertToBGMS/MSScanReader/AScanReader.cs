@@ -29,6 +29,13 @@ namespace MZConvertToBGMS.MSScanReader {
         public abstract DateTime getAcquisitionDate();
         public abstract VendorType getVendor();
         public abstract void close();
-        public abstract int getTotalScanCount();
+
+        /// <summary>
+        /// implement if available to get the progress in %
+        /// </summary>
+        /// <returns></returns>
+        public virtual int getTotalScanCount() {
+            return -1;
+        }
     }
 }
