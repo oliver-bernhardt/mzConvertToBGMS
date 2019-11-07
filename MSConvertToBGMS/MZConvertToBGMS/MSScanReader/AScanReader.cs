@@ -15,6 +15,9 @@ namespace MZConvertToBGMS.MSScanReader {
                 return new MzXmlScanReader(file);
             } else if (file.ToLower().EndsWith(".raw")) {
                 //return new ThermoScanReader(file);
+                //Support for thermo is currently disabled because I don't want to distribute the RawFileReader dlls
+                //To enable thermo support you just need to include the classes "ThermoScanReader.cs" and "ThermoAPI.cs"
+                //and include the RawFileReader dlls into the list of references.
             }
             return null;
         }
