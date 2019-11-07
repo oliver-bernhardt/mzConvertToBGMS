@@ -55,7 +55,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinaryConversionUtil.cs" />
     <Compile Include="ConversionProcessor.cs" />
     <Compile Include="MSScanReader\AScanReader.cs" />
     <Compile Include="MSScanReader\MzXmlScanReader.cs" />

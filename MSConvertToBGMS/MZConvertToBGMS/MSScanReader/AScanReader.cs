@@ -35,6 +35,10 @@ namespace MZConvertToBGMS.MSScanReader {
         public abstract VendorType getVendor();
         public abstract void close();
 
+        //Returns the mass analyzer (Orbitrap, TOF, etc.) that was used per MSLevel (MS1 or MS2)
+        //If you don't know the mass analyzer that was used, simply return MassAnalyzerType.UNKNOWN
+        public abstract MassAnalyzerType getMassAnalyzerType(MSLevel level);
+
         /// <summary>
         /// implement if available to get the progress in %
         /// </summary>

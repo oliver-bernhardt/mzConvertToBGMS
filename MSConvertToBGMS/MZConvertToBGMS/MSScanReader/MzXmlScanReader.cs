@@ -111,7 +111,7 @@ namespace MZConvertToBGMS.MSScanReader {
 
 
                         if (compressionType.Equals("zlib", StringComparison.OrdinalIgnoreCase)) {
-                            scanData = BinaryConversionUtil.DecompressZLib(scanData);
+                            scanData = Util.DecompressZLib(scanData);
                         } else if (compressionType.Equals("none", StringComparison.OrdinalIgnoreCase)) {
                             //Nothing todo in this case
                         } else {
@@ -124,13 +124,13 @@ namespace MZConvertToBGMS.MSScanReader {
 
 
                         if (precissionType.Equals("64")) {
-                            double[] dScan = BinaryConversionUtil.readDoubleArray(scanData, scanData.Length);
+                            double[] dScan = Util.readDoubleArray(scanData);
                             if (reversedOrder) { Array.Reverse(dScan); }
-                            scan = mzPairsToScan(dScan);
+                            scan = Util.mzPairsToScan(dScan);
                         } else {
-                            float[] fScan = BinaryConversionUtil.readFloatArray(scanData, scanData.Length);
+                            float[] fScan = Util.readFloatArray(scanData);
                             if (reversedOrder) { Array.Reverse(fScan); }
-                            scan = mzPairsToScan(fScan);
+                            scan = Util.mzPairsToScan(fScan);
                         }
 
 
@@ -154,46 +154,12 @@ namespace MZConvertToBGMS.MSScanReader {
             return null;
         }
 
-        private static float[,] mzPairsToScan(float[] data) {
-            float[,] scan = new float[2, data.Length / 2];
 
-            int scanIndex = 0;
-            for (int i = 0; i < data.Length; i += 2) {
-                scan[0, scanIndex] = data[i];
-                scan[1, scanIndex] = data[i + 1];
-                ++scanIndex;
-            }
-            return scan;
-        }
-
-        private static float[,] mzPairsToScan(double[] data) {
-            List<Tuple<float, float>> pairs = new List<Tuple<float, float>>(data.Length / 2);
-
-            for (int i = 0; i < data.Length; i += 2) {
-                float mz = (float)data[i];
-                float intensity = (float)data[i + 1];
-                if (mz > 0.0 || intensity > 0.0) {
-                    pairs.Add(new Tuple<float, float>(mz, intensity));   
-                }
-            }
-
-            pairs.Sort(MZPairItemOrder.INSTANCE);
-            float[,] scan = new float[2, pairs.Count];
-            for (int i = 0; i < scan.Length; ++i) {
-                scan[0, i] = pairs[i].Item1;
-                scan[1, i] = pairs[i].Item2;
-            }
-
-            return scan;
-        }
-
-        private class MZPairItemOrder : IComparer<Tuple<float, float>> {
-            public static MZPairItemOrder INSTANCE = new MZPairItemOrder();
-            public int Compare(Tuple<float, float> x, Tuple<float, float> y) {
-                return x.Item1.CompareTo(y.Item1);
-            }
-        }
-
+        /// <summary>
+        /// Extracts the attribute containing the flag for "IsCentroid" and returns the corresponding ScanMode enum
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         private ScanMode readScanMode(XmlReader reader) {
             ScanMode mode = ScanMode.Unknown;
             string value = reader.GetAttribute(ISCENTROID_ATTRIBUTE_NAME);
@@ -208,6 +174,11 @@ namespace MZConvertToBGMS.MSScanReader {
             return mode;
         }
 
+        /// <summary>
+        /// Extracts the attribute containing the flag for "MSLevel" (MS1 or MS2) and returns the corresponding MSLevel enum
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         private MSLevel readMSLevel(XmlReader reader) {
             MSLevel mode = MSLevel.UNKNOWN;
             string value = reader.GetAttribute(MSLEVEL_ATTRIBUTE_NAME);
@@ -218,6 +189,11 @@ namespace MZConvertToBGMS.MSScanReader {
             return mode;
         }
 
+        /// <summary>
+        /// Extracts the attribute containing the RT annotation for a scan and returns the retention time in minutes
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         private double readRTInMinutes(XmlReader reader) {
             string value = reader.GetAttribute(RT_ATTRIBUTE_NAME).ToLower();
             char unit = value[value.Length - 1];
@@ -240,6 +216,12 @@ namespace MZConvertToBGMS.MSScanReader {
             }
         }
 
+        /// <summary>
+        /// RT annotation in mzXML files is started with "PT" and ends with "S" (which I assume stands for the unit in seconds).
+        /// Both of them need to be removed in order to parse the string into a double
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private static string removeAllNonDigitChars(string value) {
             char decimalSign = Convert.ToChar(System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator);
             StringBuilder builder = new StringBuilder(value.Length);
@@ -283,5 +265,10 @@ namespace MZConvertToBGMS.MSScanReader {
         public override int getTotalScanCount() {
             return this.totalScanCount;
         }
+
+        public override MassAnalyzerType getMassAnalyzerType(MSLevel level) {
+            return MassAnalyzerType.Unknown;
+        }
     }
 }
+

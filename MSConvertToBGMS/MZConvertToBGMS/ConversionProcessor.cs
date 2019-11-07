@@ -17,6 +17,11 @@ namespace MZConvertToBGMS {
             this.sourceFile = sourceFile;
         }
 
+        /// <summary>
+        /// tries to convert the currently selected file if it is of one of the supported input types.
+        /// returns the converted files location on success or null if it failed to convert the file.
+        /// </summary>
+        /// <returns></returns>
         public string tryConvert() {
             MSScanReader.AScanReader reader = MSScanReader.AScanReader.getScanReader(this.sourceFile);
 
@@ -31,8 +36,11 @@ namespace MZConvertToBGMS {
 
                 bool allFine = true;
 
+                //Currently, I keep the method type as UNKOWN. that works fine for Spectronaut but not necessarily for SpectroMine or SpectroDive
                 BGSRawAPI.BGSRawFileWriter writer = new BGSRawAPI.BGSRawFileWriter(reader.getVendor().ToString(), reader.getInstrumentModel(), reader.getInstrumentSerialNumber(), 
                     reader.getAcquisitionDate(), BGSMSEnums.MSMethodType.UNKNOWN, reader.getOriginalFileName(), this.destinationFile, false, true);
+
+                writer.MetaData[BGSRawAPI.BGSRawFileWriter.MS1_MASS_ANALYZER] = reader
 
                 try {
                     int scanIndex = 0;
@@ -60,6 +68,12 @@ namespace MZConvertToBGMS {
         }
 
         private int progressCount = 0;
+        /// <summary>
+        /// updates the progress in the console.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="scanIndex"></param>
+        /// <param name="totalScanCount"></param>
         private void updateProgress(string fileName, int scanIndex, int totalScanCount) {
             if (totalScanCount > 0) {
                 int updateStep = Math.Max(1, totalScanCount / 212);
