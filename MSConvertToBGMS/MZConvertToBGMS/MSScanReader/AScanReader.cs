@@ -14,7 +14,7 @@ namespace MZConvertToBGMS.MSScanReader {
             if (file.ToLower().EndsWith(".mzxml")) {
                 return new MzXmlScanReader(file);
             } else if (file.ToLower().EndsWith(".raw")) {
-                return new ThermoScanReader(file);
+                //return new ThermoScanReader(file);
             }
             return null;
         }
