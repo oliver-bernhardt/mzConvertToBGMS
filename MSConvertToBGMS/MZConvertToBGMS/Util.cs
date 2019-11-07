@@ -155,7 +155,7 @@ namespace MZConvertToBGMS {
                 pairs.Sort(MZPairItemOrder.INSTANCE);
             }
             float[,] scan = new float[2, pairs.Count];
-            for (int i = 0; i < scan.Length; ++i) {
+            for (int i = 0; i < pairs.Count; ++i) {
                 scan[0, i] = pairs[i].Item1;
                 scan[1, i] = pairs[i].Item2;
             }
