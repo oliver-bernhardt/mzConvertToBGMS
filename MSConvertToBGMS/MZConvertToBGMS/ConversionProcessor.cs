@@ -40,7 +40,8 @@ namespace MZConvertToBGMS {
                 BGSRawAPI.BGSRawFileWriter writer = new BGSRawAPI.BGSRawFileWriter(reader.getVendor().ToString(), reader.getInstrumentModel(), reader.getInstrumentSerialNumber(), 
                     reader.getAcquisitionDate(), BGSMSEnums.MSMethodType.UNKNOWN, reader.getOriginalFileName(), this.destinationFile, false, true);
 
-                writer.MetaData[BGSRawAPI.BGSRawFileWriter.MS1_MASS_ANALYZER] = reader
+                writer.MetaData[BGSRawAPI.BGSRawFileWriter.MS1_MASS_ANALYZER] = reader.getMassAnalyzerType(BGSMSEnums.MSLevel.MS1).ToString();
+                writer.MetaData[BGSRawAPI.BGSRawFileWriter.MS2_MASS_ANALYZER] = reader.getMassAnalyzerType(BGSMSEnums.MSLevel.MS2).ToString();
 
                 try {
                     int scanIndex = 0;
