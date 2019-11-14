@@ -18,7 +18,14 @@ PLEASE FEEL FREE TO SHARE AND ADD TO THIS PROJECT
 
 Currently, the usage of this converter is fairly straight forward.
 
+#### Required Commands:  
+```
 -in [input file or folder]
+```
+
+#### Optional Commands:  
+```
 -out [output file or folder]
+```
 
 If -out is not provided, it will just place the BGMS file next to the input file under the same name but with .bgms appended.
