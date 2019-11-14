@@ -13,6 +13,17 @@ oliver.bernhardt@biognosys.com
 Whoever is willing to take over the torch is welcome.
 If you have questions about the currently available code structure, let me know.
 
+If you want to add new formats you only need to derive a new class from
+
+```
+AScanReader
+```
+and add it to the "factory" 
+
+```
+AScanReader.getScanReader(string file);
+```
+
 PLEASE FEEL FREE TO SHARE AND ADD TO THIS PROJECT
 
 
