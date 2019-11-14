@@ -18,14 +18,19 @@ If you want to add new formats you only need to derive a new class from
 ```
 AScanReader
 ```
-and add it to the "factory" 
+and add it to the "factory" .
 
 ```
 AScanReader.getScanReader(string file);
 ```
 
-PLEASE FEEL FREE TO SHARE AND ADD TO THIS PROJECT
+Everything else should be taken care of by the framework.
 
+##########################################################
+
+#### PLEASE FEEL FREE TO SHARE AND ADD TO THIS PROJECT
+
+##########################################################
 
 Currently, the usage of this converter is fairly straight forward.
 
