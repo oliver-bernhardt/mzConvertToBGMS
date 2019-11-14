@@ -14,3 +14,11 @@ Whoever is willing to take over the torch is welcome.
 If you have questions about the currently available code structure, let me know.
 
 PLEASE FEEL FREE TO SHARE AND ADD TO THIS PROJECT
+
+
+Currently, the usage of this converter is fairly straight forward.
+
+-in [input file or folder]
+-out [output file or folder]
+
+If -out is not provided, it will just place the BGMS file next to the input file under the same name but with .bgms appended.
