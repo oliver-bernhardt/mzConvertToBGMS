@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * Original author: Oliver M. Bernhardt
+ * Email: oliver.bernhardt@biognosys.com,
+ *
+ * Copyright (c) 2019 Oliver Bernhardt
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
