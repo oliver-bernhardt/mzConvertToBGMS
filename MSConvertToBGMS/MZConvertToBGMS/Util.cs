@@ -99,6 +99,43 @@ namespace MZConvertToBGMS {
             return v;
         }
 
+        public static bool TrySafeParse(string v, out double result) {
+            char ds = getDecimalPointSign(v);
+            char sds = getSystemDecimalPointSign();
+            if (ds != sds) {
+                v = v.Replace(ds, sds);
+            }
+            return double.TryParse(v, out result);
+        }
+
+        private static char? decimalPointSign = null;
+        private static object THREADLOCK = new object();
+        public static char getSystemDecimalPointSign() {
+            if (decimalPointSign == null) {
+                lock (THREADLOCK) {
+                    double x = 9813.138741;
+                    string asString = x.ToString();
+                    decimalPointSign = getDecimalPointSign(asString);
+                }
+            }
+            return decimalPointSign.Value;
+        }
+
+        private static char getDecimalPointSign(string doubleS) {
+            if (doubleS == null) return '.';
+            foreach (char c in doubleS) {
+                switch (c) {
+                    case '.':
+                        return '.';
+                    case ',':
+                        return ',';
+                    default:
+                        break;
+                }
+            }
+            return '.';
+        }
+
 
         /// <summary>
         /// Converts the M/Z - Intensity pairs from the mzXML file into the scan format that the BGMS file expects

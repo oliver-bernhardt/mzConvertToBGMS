@@ -146,7 +146,7 @@ namespace MZConvertToBGMS.MSScanReader {
                         reader.Read();
                         string windowCenterString = reader.Value;
                         double center; double width;
-                        if (double.TryParse(widthString, out width) && double.TryParse(windowCenterString, out center)) {
+                        if (Util.TrySafeParse(widthString, out width) && Util.TrySafeParse(windowCenterString, out center)) {
                             mzWindowStart = center - (width / 2.0);
                             mzWindowEnd = center + (width / 2.0);
                         }
@@ -207,7 +207,7 @@ namespace MZConvertToBGMS.MSScanReader {
             value = removeAllNonDigitChars(value);
 
             double rt;
-            if (double.TryParse(value, out rt)) {
+            if (Util.TrySafeParse(value, out rt)) {
                 switch (unit) {
                     case 's':
                         return rt / 60.0;
