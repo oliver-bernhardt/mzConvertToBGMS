@@ -1,4 +1,4 @@
-# mzConvertToBGMS
+# MSConvertToBGMS
 This project is meant for generic conversion from mzXML to Biognosys BGMS file format.
 
 I added a working version for mzXML to BGMS as well as demo code for Thermo raw support
